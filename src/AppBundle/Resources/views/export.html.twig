@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="container">
+        <form action="{{ path('export') }}" method="post" class="form-horizontal">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_rest(form) }}
+
+            <button type="submit">Submit</button>
+            {{ form_end(form) }}
+        </form>
+        <a href="{{ path('homepage') }}">Homepage</a>
+    </div>
+{% endblock %}
