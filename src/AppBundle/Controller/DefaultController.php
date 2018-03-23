@@ -26,7 +26,8 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="homepage")
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         return $this->render('AppBundle::index.html.twig');
     }
 
@@ -46,12 +47,15 @@ class DefaultController extends Controller
 
             switch ($format) {
                 case 'ods':
+                    $contentType = 'application/vnd.oasis.opendocument.spreadsheet';
                     $writer = new Ods($spreadsheet);
                     break;
                 case 'xlsx':
+                    $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                     $writer = new Xlsx($spreadsheet);
                     break;
                 case 'csv':
+                    $contentType = 'text/csv';
                     $writer = new Csv($spreadsheet);
                     break;
                 default:
@@ -61,7 +65,7 @@ class DefaultController extends Controller
             }
 
             $response = new StreamedResponse();
-            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Type', $contentType);
             $response->headers->set('Content-Disposition', 'attachment;filename="'.$filename.'"');
             $response->setPrivate();
             $response->headers->addCacheControlDirective('no-cache', true);
@@ -78,7 +82,8 @@ class DefaultController extends Controller
         ]);
     }
 
-    protected function createSpreadsheet() {
+    protected function createSpreadsheet()
+    {
         $spreadsheet = new Spreadsheet();
         // Get active sheet - also possible to retrieve a specific sheet
         $sheet = $spreadsheet->getActiveSheet();
@@ -143,7 +148,7 @@ class DefaultController extends Controller
     {
         $filename = $this->get('kernel')->getRootDir().'/../export/'.self::FILENAME.'.xlsx';
         if (!file_exists($filename)) {
-            exit('File does not exist.');
+            throw new \Exception('File does not exist');
         }
 
         $spreadsheet = $this->readFile($filename);
@@ -154,11 +159,13 @@ class DefaultController extends Controller
         ]);
     }
 
-    protected function loadFile($filename) {
+    protected function loadFile($filename)
+    {
         return IOFactory::load($filename);
     }
 
-    protected function readFile($filename) {
+    protected function readFile($filename)
+    {
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
         switch ($extension) {
             case 'ods':
@@ -177,7 +184,8 @@ class DefaultController extends Controller
         return $reader->load($filename);
     }
 
-    protected function createDataFromSpreadsheet($spreadsheet) {
+    protected function createDataFromSpreadsheet($spreadsheet)
+    {
         $data = [];
         foreach ($spreadsheet->getWorksheetIterator() as $worksheet) {
             $worksheetTitle = $worksheet->getTitle();

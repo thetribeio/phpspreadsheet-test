@@ -13,14 +13,13 @@ class ExcelFormatType extends AbstractType
     {
         $builder
             ->add('format', ChoiceType::class, [
-                'label' => false,
                 'choices' => [
-                    'Select a format' => '',
                     'xlsx' => 'xlsx',
                     'ods' => 'ods',
                     'csv' => 'csv',
                 ],
-                'required' => false,
+                'label' => false,
+                'placeholder' => 'Select a format',
             ]);
     }
 }
